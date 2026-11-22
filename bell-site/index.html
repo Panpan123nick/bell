@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bell">
+<meta name="theme-color" content="#000000">
+<meta name="format-detection" content="telephone=no">
+<title>Bell</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+  <!-- Bird's-eye view. Layers share one square box so their SVGs line up. -->
+  <div class="bellbox" id="base"></div>
+  <div class="bellbox" id="cardbox">
+    <div class="card" id="card"><div class="card-pose" id="cardPose"></div></div>
+  </div>
+  <div class="bellbox" id="dome"></div>
+  <div id="bellHit"></div>
+</main>
+
+<div id="armZone" class="zone"></div>
+<div id="settingsZone" class="zone"></div>
+
+<div id="settings" hidden>
+  <div class="panel">
+    <h1>Performer settings</h1>
+
+    <section>
+      <h2>Card back</h2>
+      <div class="pick">
+        <div class="preview" id="preview"></div>
+        <div class="seg" id="back">
+          <button data-v="blue">Blue</button>
+          <button data-v="red">Red</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Arm zone</h2>
+      <div class="seg" id="corner">
+        <button data-v="left">Bottom-left</button>
+        <button data-v="right">Bottom-right</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Backup auto-jam</h2>
+      <label class="row"><input type="checkbox" id="autoJam"> Jam automatically after</label>
+      <div class="row stepper">
+        <button id="jamMinus">−</button><output id="jamCount">3</output><button id="jamPlus">+</button>
+        <span>normal rings (the next tap jams)</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Test</h2>
+      <div class="seg">
+        <button id="testDing">Ding</button>
+        <button id="testClunk">Clunk</button>
+        <button id="testHaptic">Haptic</button>
+      </div>
+    </section>
+
+    <section class="help">
+      <h2>Cheat sheet</h2>
+      <ul>
+        <li>Tap arm zone once: armed (one short buzz). Tap again: disarmed (no buzz).</li>
+        <li>Next bell tap clunks; it stays stuck until opened.</li>
+        <li>Twist the jammed bell: drag your finger around its edge to unscrew the dome.</li>
+        <li>Flick the card toward the bottom edge.</li>
+        <li>Two-finger tap anywhere: reset.</li>
+        <li>Triple-tap top-left corner: this screen.</li>
+      </ul>
+    </section>
+
+    <button id="done" class="primary">Done</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
