@@ -1,11 +1,12 @@
 // Network-first: when online you always get the latest files; the cache is
 // only the offline fallback. VERSION just names the cache.
-const VERSION = 'bell-v3';
+const VERSION = 'bell-v4';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './marble.jpg',
   './manifest.webmanifest',
   './icon-180.png',
   './icon-192.png',

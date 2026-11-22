@@ -26,8 +26,11 @@
   <div id="bellHit"></div>
 </main>
 
-<div id="armZone" class="zone"></div>
-<div id="settingsZone" class="zone"></div>
+<!-- Arm zones in every corner; the top-left one also opens settings on a triple tap -->
+<div class="zone arm tl" id="settingsZone"></div>
+<div class="zone arm tr"></div>
+<div class="zone arm bl"></div>
+<div class="zone arm br"></div>
 
 <div id="settings" hidden>
   <div class="panel">
@@ -41,14 +44,6 @@
           <button data-v="blue">Blue</button>
           <button data-v="red">Red</button>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Arm zone</h2>
-      <div class="seg" id="corner">
-        <button data-v="left">Bottom-left</button>
-        <button data-v="right">Bottom-right</button>
       </div>
     </section>
 
@@ -73,10 +68,10 @@
     <section class="help">
       <h2>Cheat sheet</h2>
       <ul>
-        <li>Tap arm zone once: armed (one short buzz). Tap again: disarmed (no buzz).</li>
+        <li>Tap any corner once: armed (one short buzz). Tap again: disarmed (no buzz).</li>
         <li>Next bell tap clunks; it stays stuck until opened.</li>
-        <li>Twist the jammed bell: drag your finger around its edge to unscrew the dome.</li>
-        <li>Flick the card toward the bottom edge.</li>
+        <li>Twist the jammed bell: drag your finger around its edge for one full turn to unscrew the dome.</li>
+        <li>Flick the card off the left, right or bottom edge.</li>
         <li>Two-finger tap anywhere: reset.</li>
         <li>Triple-tap top-left corner: this screen.</li>
       </ul>

@@ -24,7 +24,8 @@ body {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 46% 46%, #2c2621 0%, #17120f 40%, #070605 85%);
+    radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0) 45%, rgba(40,38,36,.28) 100%),
+    url(marble.jpg) center / cover #ebeae7;
 }
 
 /* All bell layers share one square box so their SVGs line up exactly */
@@ -65,7 +66,7 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 26%;
+  width: 47%; /* corner to corner it just fits inside the dome (diameter 75% of the box) */
   translate: -50% -50%;
   visibility: hidden;
   pointer-events: none;
@@ -83,7 +84,7 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(2px 3px 3px rgba(0,0,0,.6));
+  filter: drop-shadow(.5px 1px 1px rgba(0,0,0,.45)) drop-shadow(3px 7px 7px rgba(0,0,0,.3));
 }
 
 /* Secret zones */
@@ -93,9 +94,11 @@ body {
   background: transparent;
   touch-action: none;
 }
-#settingsZone { top: 0; left: 0; width: 80px; height: calc(80px + env(safe-area-inset-top)); }
-#armZone { width: 100px; height: 100px; bottom: 0; right: 0; }
-#armZone.left { right: auto; left: 0; }
+.zone.arm { width: 150px; height: 150px; }
+.zone.tl { top: 0; left: 0; }
+.zone.tr { top: 0; right: 0; }
+.zone.bl { bottom: 0; left: 0; }
+.zone.br { bottom: 0; right: 0; }
 
 /* Settings (performer only) */
 #settings {

@@ -6,7 +6,7 @@
 
   // ---------- Settings ----------
   const KEY = 'bell.settings.v3';
-  const DEFAULTS = { back: 'blue', armCorner: 'right', autoJam: false, autoJamAfter: 3 };
+  const DEFAULTS = { back: 'blue', autoJam: false, autoJamAfter: 3 };
   let settings = { ...DEFAULTS };
   try { settings = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (_) {}
   const saveSettings = () => { try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch (_) {} };
@@ -15,47 +15,55 @@
   function baseSVG() {
     let screws = '';
     for (const a of [30, 150, 270]) {
-      screws += `<g transform="rotate(${a} 150 150)"><circle cx="150" cy="96" r="3.2" fill="#6b6b6b"/>
-        <path d="M148,96 H152" stroke="#222" stroke-width="1"/></g>`;
+      screws += `<g transform="rotate(${a} 150 150)"><circle cx="150" cy="96" r="3.4" fill="url(#b-chrome)"/>
+        <path d="M147.6,96 H152.4" stroke="#333" stroke-width="1"/></g>`;
     }
     return `<svg viewBox="0 0 300 300" aria-hidden="true">
       <defs>
-        <radialGradient id="b-shadow" cx=".5" cy=".5" r=".5">
-          <stop offset=".75" stop-color="#000" stop-opacity=".7"/>
-          <stop offset="1" stop-color="#000" stop-opacity="0"/>
+        <filter id="b-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
+        <filter id="b-tight" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.2"/></filter>
+        <filter id="b-blur3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+        <radialGradient id="b-top" cx=".38" cy=".32" r=".8">
+          <stop offset="0" stop-color="#3a3a3c"/>
+          <stop offset=".5" stop-color="#141415"/>
+          <stop offset="1" stop-color="#040404"/>
         </radialGradient>
-        <radialGradient id="b-top" cx=".4" cy=".35" r=".75">
-          <stop offset="0" stop-color="#34312e"/>
-          <stop offset=".55" stop-color="#151413"/>
-          <stop offset="1" stop-color="#070707"/>
-        </radialGradient>
-        <linearGradient id="b-bevel" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#8a8a8a"/>
-          <stop offset=".45" stop-color="#2a2a2a"/>
-          <stop offset="1" stop-color="#000"/>
+        <linearGradient id="b-rim" x1=".15" y1=".1" x2=".85" y2=".9">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset=".22" stop-color="#9a9a9e"/>
+          <stop offset=".5" stop-color="#3b3b3e"/>
+          <stop offset=".78" stop-color="#c9c9cc"/>
+          <stop offset="1" stop-color="#55555a"/>
         </linearGradient>
         <radialGradient id="b-inner" cx=".5" cy=".5" r=".5">
-          <stop offset="0" stop-color="#2b1e15"/>
-          <stop offset=".8" stop-color="#140d09"/>
-          <stop offset="1" stop-color="#060403"/>
+          <stop offset="0" stop-color="#2a2622"/>
+          <stop offset=".85" stop-color="#121010"/>
+          <stop offset="1" stop-color="#050505"/>
         </radialGradient>
         <radialGradient id="b-chrome" cx=".35" cy=".3" r=".8">
           <stop offset="0" stop-color="#fff"/>
-          <stop offset=".45" stop-color="#b9b9b9"/>
+          <stop offset=".45" stop-color="#bdbdbd"/>
           <stop offset="1" stop-color="#3c3c3c"/>
         </radialGradient>
       </defs>
-      <circle cx="160" cy="164" r="150" fill="url(#b-shadow)"/>
+      <!-- shadows on the marble: wide soft one and a tight contact one -->
+      <circle cx="158" cy="166" r="141" fill="#000" fill-opacity=".38" filter="url(#b-soft)"/>
+      <circle cx="152" cy="154" r="140" fill="#000" fill-opacity=".55" filter="url(#b-tight)"/>
+      <!-- glossy black lacquer top -->
       <circle cx="150" cy="150" r="140" fill="url(#b-top)"/>
-      <circle cx="150" cy="150" r="137.5" fill="none" stroke="url(#b-bevel)" stroke-width="4"/>
-      <circle cx="150" cy="150" r="140" fill="none" stroke="#000" stroke-opacity=".7"/>
-      <circle cx="150" cy="150" r="113" fill="url(#b-inner)"/>
-      <circle cx="150" cy="150" r="113" fill="none" stroke="#7a5a26" stroke-opacity=".5" stroke-width="1.5"/>
+      <path d="M58,92 A110,110 0 0 1 182,38" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="10" stroke-linecap="round" filter="url(#b-blur3)"/>
+      <path d="M248,196 A110,110 0 0 1 206,244" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="7" stroke-linecap="round" filter="url(#b-blur3)"/>
+      <!-- chrome trim rings -->
+      <circle cx="150" cy="150" r="138.6" fill="none" stroke="url(#b-rim)" stroke-width="3"/>
+      <circle cx="150" cy="150" r="140" fill="none" stroke="#000" stroke-opacity=".6" stroke-width=".8"/>
+      <circle cx="150" cy="150" r="115.5" fill="none" stroke="url(#b-rim)" stroke-width="2.2"/>
+      <circle cx="150" cy="150" r="114" fill="url(#b-inner)"/>
       ${screws}
       <!-- striker mechanism -->
-      <circle cx="150" cy="150" r="24" fill="#1c1c1c" stroke="#333"/>
-      <path d="M150,150 L197,126" stroke="#7d7d7d" stroke-width="5" stroke-linecap="round"/>
-      <path d="M160,154 q6,-8 12,0 t12,0 t12,0" fill="none" stroke="#999" stroke-width="1.6"/>
+      <circle cx="150" cy="150" r="24" fill="#1c1c1c" stroke="#3a3a3a"/>
+      <path d="M150,150 L197,126" stroke="#8a8a8a" stroke-width="5" stroke-linecap="round"/>
+      <path d="M150,149 L197,125" stroke="#d8d8d8" stroke-opacity=".6" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M160,154 q6,-8 12,0 t12,0 t12,0" fill="none" stroke="#a5a5a5" stroke-width="1.6"/>
       <circle cx="199" cy="125" r="9" fill="url(#b-chrome)"/>
       <circle cx="150" cy="150" r="8" fill="url(#b-chrome)"/>
     </svg>`;
@@ -65,64 +73,73 @@
     let flutes = '', ticks = '';
     for (let i = 0; i < 16; i++) {
       flutes += `<g transform="rotate(${i * 22.5} 150 150)">
-        <path d="M150,116 L150,52" stroke="#3a2506" stroke-opacity=".4" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M152.6,116 L152.6,54" stroke="#fff3c8" stroke-opacity=".3" stroke-width="1.2" stroke-linecap="round"/></g>`;
+        <path d="M150,116 L150,52" stroke="#3a2506" stroke-opacity=".28" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M152.4,116 L152.4,54" stroke="#fff6d8" stroke-opacity=".32" stroke-width="1" stroke-linecap="round"/></g>`;
     }
     for (let i = 0; i < 90; i++) {
-      ticks += `<path transform="rotate(${i * 4} 150 150)" d="M150,39.5 V45" stroke="#2a1a05" stroke-opacity=".5" stroke-width="1.4"/>`;
+      ticks += `<path transform="rotate(${i * 4} 150 150)" d="M150,39.5 V45" stroke="#2a1a05" stroke-opacity=".45" stroke-width="1.3"/>`;
     }
     return `<svg viewBox="0 0 300 300" aria-hidden="true">
       <defs>
-        <radialGradient id="d-body" cx=".5" cy=".5" r=".5">
-          <stop offset="0" stop-color="#efcd78"/>
-          <stop offset=".45" stop-color="#d4a248"/>
-          <stop offset=".8" stop-color="#9c6b22"/>
-          <stop offset=".94" stop-color="#6b4713"/>
-          <stop offset="1" stop-color="#3a2506"/>
+        <filter id="d-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+        <filter id="d-blur2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4"/></filter>
+        <radialGradient id="d-body" cx=".42" cy=".4" r=".62">
+          <stop offset="0" stop-color="#fbe3a0"/>
+          <stop offset=".2" stop-color="#eec565"/>
+          <stop offset=".5" stop-color="#d09a38"/>
+          <stop offset=".78" stop-color="#9a641a"/>
+          <stop offset=".93" stop-color="#5e3b0b"/>
+          <stop offset="1" stop-color="#2e1c04"/>
         </radialGradient>
-        <radialGradient id="d-light" cx=".36" cy=".32" r=".55">
-          <stop offset="0" stop-color="#fff" stop-opacity=".6"/>
-          <stop offset=".35" stop-color="#fff6d6" stop-opacity=".18"/>
-          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="d-shade" cx=".36" cy=".32" r=".85">
-          <stop offset=".5" stop-color="#000" stop-opacity="0"/>
-          <stop offset="1" stop-color="#000" stop-opacity=".5"/>
+        <linearGradient id="d-edge" x1=".2" y1=".2" x2=".85" y2=".9">
+          <stop offset="0" stop-color="#fff2c8" stop-opacity="0"/>
+          <stop offset=".55" stop-color="#fff2c8" stop-opacity="0"/>
+          <stop offset="1" stop-color="#fff4d6" stop-opacity=".75"/>
+        </linearGradient>
+        <radialGradient id="d-shade" cx=".4" cy=".36" r=".8">
+          <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+          <stop offset="1" stop-color="#000" stop-opacity=".45"/>
         </radialGradient>
         <radialGradient id="d-spec" cx=".5" cy=".5" r=".5">
-          <stop offset="0" stop-color="#fff" stop-opacity=".95"/>
+          <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+          <stop offset=".6" stop-color="#fff" stop-opacity=".35"/>
           <stop offset="1" stop-color="#fff" stop-opacity="0"/>
         </radialGradient>
         <radialGradient id="d-cap" cx=".36" cy=".32" r=".8">
           <stop offset="0" stop-color="#fff"/>
-          <stop offset=".4" stop-color="#cfcfcf"/>
+          <stop offset=".4" stop-color="#d4d4d4"/>
           <stop offset=".85" stop-color="#5a5a5a"/>
           <stop offset="1" stop-color="#2a2a2a"/>
         </radialGradient>
       </defs>
+      <!-- the dome's own shadow on the base (travels with the dome) -->
+      <circle cx="157" cy="160" r="112" fill="#000" fill-opacity=".55" filter="url(#d-blur)"/>
       <circle cx="150" cy="150" r="112" fill="url(#d-body)"/>
       <!-- engraved detail that turns with the dome -->
       <g class="spin">
         ${flutes}${ticks}
-        <circle cx="150" cy="150" r="101" fill="none" stroke="#3a2506" stroke-opacity=".35" stroke-width="1.5"/>
-        <circle cx="150" cy="150" r="99.5" fill="none" stroke="#fff0c0" stroke-opacity=".2"/>
-        <circle cx="150" cy="150" r="33" fill="none" stroke="#3a2506" stroke-opacity=".35" stroke-width="1.5"/>
+        <circle cx="150" cy="150" r="101" fill="none" stroke="#3a2506" stroke-opacity=".3" stroke-width="1.5"/>
+        <circle cx="150" cy="150" r="99.5" fill="none" stroke="#fff0c0" stroke-opacity=".25"/>
+        <circle cx="150" cy="150" r="33" fill="none" stroke="#3a2506" stroke-opacity=".3" stroke-width="1.5"/>
         <g transform="rotate(11.25 150 150)">
           <circle cx="150" cy="47" r="4.6" fill="url(#d-cap)"/>
           <path d="M147,47 H153" stroke="#333" stroke-width="1.2"/>
         </g>
       </g>
-      <!-- fixed lighting (does not turn) -->
-      <circle cx="150" cy="150" r="112" fill="url(#d-light)"/>
+      <!-- fixed lighting (does not turn): window reflection, room bounce, specular -->
       <circle cx="150" cy="150" r="112" fill="url(#d-shade)"/>
-      <ellipse cx="112" cy="108" rx="24" ry="12" transform="rotate(-40 112 108)" fill="url(#d-spec)"/>
-      <circle cx="150" cy="150" r="111" fill="none" stroke="#2a1a05" stroke-width="2.5"/>
-      <circle cx="150" cy="150" r="108" fill="none" stroke="#ffe7a8" stroke-opacity=".22"/>
+      <path d="M72,128 C76,96 96,74 126,66 C118,84 106,104 98,134 C90,140 78,140 72,128 Z" fill="#fff" fill-opacity=".42" filter="url(#d-blur2)"/>
+      <path d="M134,62 C150,58 166,60 176,64 C168,70 154,72 140,74 Z" fill="#fff" fill-opacity=".3" filter="url(#d-blur2)"/>
+      <ellipse cx="108" cy="104" rx="16" ry="7" transform="rotate(-42 108 104)" fill="url(#d-spec)"/>
+      <circle cx="150" cy="150" r="108.5" fill="none" stroke="url(#d-edge)" stroke-width="5" filter="url(#d-blur2)"/>
+      <circle cx="150" cy="150" r="111.2" fill="none" stroke="#241503" stroke-width="2"/>
+      <circle cx="150" cy="150" r="109.6" fill="none" stroke="#ffe9b0" stroke-opacity=".3" stroke-width=".8"/>
       <g class="cap">
-        <circle cx="154" cy="155" r="22" fill="#000" fill-opacity=".45"/>
+        <circle cx="155" cy="157" r="22" fill="#000" fill-opacity=".45" filter="url(#d-blur2)"/>
         <circle cx="150" cy="150" r="20" fill="url(#d-cap)"/>
         <circle cx="150" cy="150" r="20" fill="none" stroke="#1d1d1d" stroke-opacity=".6"/>
-        <ellipse cx="143" cy="143" rx="7" ry="4" transform="rotate(-35 143 143)" fill="#fff" fill-opacity=".8"/>
+        <circle cx="150" cy="150" r="17.5" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".8"/>
+        <ellipse cx="143" cy="143" rx="7" ry="4" transform="rotate(-35 143 143)" fill="#fff" fill-opacity=".85"/>
       </g>
     </svg>`;
   }
@@ -131,10 +148,10 @@
   // Original ornate back: white border, framed field of fine scrollwork, centre rosette.
   // Folded in quarters, we see one corner quarter: the rounded original corner is
   // top-right, the folded edges (stacked paper) run down the left and along the bottom.
-  const BACKS = { blue: ['#1a2a6c', '#f3f0e6'], red: ['#8c1328', '#f6efe6'] };
+  const BACKS = { blue: ['#1a2a6c', '#f3f0e6', '#0c1540'], red: ['#8c1328', '#f6efe6', '#4f0915'] };
   let uid = 0;
   function foldedCardSVG(back) {
-    const [ground, line] = BACKS[back] || BACKS.blue;
+    const [ground, line, crease] = BACKS[back] || BACKS.blue;
     const id = 'fc' + (++uid);
     const q = 'M12,0 H125 V173 Q125,175 123,175 H0 V12 Q0,0 12,0 Z';
     let curls = '', petals = '', dots = '';
@@ -157,6 +174,18 @@
           </g>
           <circle cx="9" cy="9" r="1.1" fill="${line}"/>
         </pattern>
+        <!-- faint paper grain -->
+        <filter id="${id}t" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="2" seed="4"/>
+          <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  .16 0 0 0 0"/>
+        </filter>
+        <!-- the fold bends the printed back around the crease -->
+        <linearGradient id="${id}fr" x1="0" x2="1">
+          <stop offset="0" stop-color="${ground}"/><stop offset=".55" stop-color="${ground}"/><stop offset="1" stop-color="${crease}"/>
+        </linearGradient>
+        <linearGradient id="${id}fb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="${ground}"/><stop offset=".55" stop-color="${ground}"/><stop offset="1" stop-color="${crease}"/>
+        </linearGradient>
         <linearGradient id="${id}g" x1="1" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
           <stop offset=".55" stop-color="#fff" stop-opacity="0"/>
@@ -172,21 +201,26 @@
         </linearGradient>
       </defs>
       <g transform="translate(123 0) scale(-1 1)">
-        <!-- inner layers peeking out along the open (original) edges -->
-        <path d="M9,-3.2 H121 V170 H-3.2 V9 Q-3.2,-3.2 9,-3.2 Z" fill="#dcd7cb"/>
-        <path d="M10.5,-1.6 H123 V172 H-1.6 V10.5 Q-1.6,-1.6 10.5,-1.6 Z" fill="#f4f1ea"/>
-        <!-- folded edges: stacked paper thickness -->
-        <rect width="132" height="182" rx="6" fill="#a9a293"/>
-        <rect width="130.4" height="180.4" rx="5" fill="#e8e3d8"/>
-        <rect width="128.6" height="178.6" rx="4" fill="#c6bfb0"/>
-        <rect width="127" height="177" rx="3" fill="#f6f3ec"/>
+        <!-- inner layers' white borders, slightly out of line along the open (original) edges -->
+        <path d="M9.5,-2.6 H118 V168 H-2.4 V9.5 Q-2.4,-2.6 9.5,-2.6 Z" fill="#d6d1c5"/>
+        <path d="M10.8,-1.3 H121 V171 H-1.1 V10.8 Q-1.1,-1.3 10.8,-1.3 Z" fill="#f2efe8"/>
+        <!-- folded edges: the back design wrapping round the creases -->
+        <path d="M120,1 H129.2 Q130.4,1 130.4,3 V176 H120 Z" fill="url(#${id}fr)"/>
+        <path d="M1,170 H128 Q130.4,170 130.4,172 V177.4 Q130.4,179.4 128,179.4 H3 Q1,179.4 1,177.4 Z" fill="url(#${id}fb)"/>
+        <!-- ink cracked along the creases shows white fibres -->
+        <g fill="none" stroke="#fff" stroke-linecap="round">
+          <path d="M126.6,6 V173" stroke-opacity=".5" stroke-width=".55" stroke-dasharray="4 2.2 1 3.5 .6 2.4 6 1.8"/>
+          <path d="M5,176.4 H124" stroke-opacity=".5" stroke-width=".55" stroke-dasharray="3 2.6 .8 2 5 1.6 1.2 3"/>
+          <path d="M128.2,10 V170" stroke-opacity=".22" stroke-width=".4" stroke-dasharray="1 4 2.5 3"/>
+        </g>
+        <path d="M120,1 H129.2 Q130.4,1 130.4,3 V177.4 Q130.4,179.4 128,179.4 H3 Q1,179.4 1,177.4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".6"/>
         <g clip-path="url(#${id}q)">
           <rect width="125" height="175" fill="#f7f4ec"/>
           <rect x="9" y="9" width="240" height="340" rx="6" fill="${ground}"/>
           <rect x="13" y="13" width="232" height="332" rx="4" fill="url(#${id}p)"/>
           <rect x="13" y="13" width="232" height="332" rx="4" fill="none" stroke="${line}" stroke-width=".8"/>
           <g fill="none" stroke="${line}" stroke-width="1.1" stroke-linecap="round">
-            <rect x="18" y="18" width="40" height="40" fill="${ground}" stroke="none"/>
+            <rect x="18" y="18" width="40" height="40" rx="2" fill="${ground}" stroke-width=".6"/>
             <path d="${scroll}"/><path transform="matrix(0 1 1 0 0 0)" d="${scroll}"/>
           </g>
           <circle cx="23" cy="23" r="2" fill="${line}"/>
@@ -195,6 +229,7 @@
           <g fill="none" stroke="${line}" stroke-width=".8">${petals}</g>
           <g fill="${line}">${dots}</g>
           <circle cx="125" cy="175" r="16" fill="none" stroke="${line}" stroke-width="1"/>
+          <rect width="125" height="175" filter="url(#${id}t)"/>
           <rect width="125" height="175" fill="url(#${id}g)"/>
           <rect width="125" height="175" fill="url(#${id}r)"/>
           <rect width="125" height="175" fill="url(#${id}b)"/>
@@ -413,18 +448,17 @@
   const hit = $('#bellHit');
   const card = $('#card');
   const cardPose = $('#cardPose');
-  const armZone = $('#armZone');
+  const armZones = document.querySelectorAll('.zone.arm');
   const settingsZone = $('#settingsZone');
   const settingsEl = $('#settings');
 
   function applySettings() {
     cardPose.innerHTML = foldedCardSVG(settings.back);
-    armZone.classList.toggle('left', settings.armCorner === 'left');
   }
 
   // ---------- Routine state ----------
   // ready -> (armed / auto) -> jammed -> (twist) -> opening -> open -> gone
-  const UNSCREW_DEG = 120;
+  const UNSCREW_DEG = 360; // one full turn before the dome comes off
   let state = 'ready';
   let armed = false;
   let rings = 0;
@@ -632,14 +666,28 @@
     const a = d.samples[0], b = d.samples[d.samples.length - 1];
     const dt = Math.max(1, b.t - a.t);
     const vx = (b.x - a.x) / dt, vy = (b.y - a.y) / dt; // px per ms
-    if (!cancelled && ((vy > 0.5 && d.dy > 15) || d.dy > window.innerHeight * 0.28)) {
-      // Slide off the bottom edge
+    const W = window.innerWidth, H = window.innerHeight;
+    const side = Math.abs(d.dx) > Math.abs(d.dy);
+    const down = !side && ((vy > 0.5 && d.dy > 15) || d.dy > H * 0.28);
+    const sideways = side && ((Math.abs(vx) > 0.5 && Math.abs(d.dx) > 15) || Math.abs(d.dx) > W * 0.3);
+    if (!cancelled && (down || sideways)) {
+      // Slide off the nearest edge in the flick direction
       const rect = card.getBoundingClientRect();
-      const dist = window.innerHeight - rect.top + 40;
-      const dur = clamp(dist / Math.max(vy, 1.4), 160, 360);
-      const tx = d.dx + vx * dur * 0.4;
+      let tx, ty, dur;
+      if (down) {
+        const dist = H - rect.top + 40;
+        dur = clamp(dist / Math.max(vy, 1.4), 160, 360);
+        tx = d.dx + vx * dur * 0.4;
+        ty = d.dy + dist;
+      } else {
+        const dir = Math.sign(d.dx);
+        const dist = dir > 0 ? W - rect.left + 40 : rect.right + 40;
+        dur = clamp(dist / Math.max(Math.abs(vx), 1.4), 160, 360);
+        tx = d.dx + dir * dist;
+        ty = d.dy + vy * dur * 0.4;
+      }
       card.style.transition = `transform ${dur}ms cubic-bezier(.35,0,.9,.6)`;
-      card.style.transform = `translate3d(${tx}px, ${d.dy + dist}px, 0) scale(.94)`;
+      card.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(.94)`;
       state = 'gone';
       haptic(15);
       timers.push(setTimeout(() => {
@@ -657,20 +705,19 @@
   card.addEventListener('pointercancel', (e) => endDrag(e, true));
 
   // ---------- Secret zones ----------
-  armZone.addEventListener('pointerdown', (e) => {
+  armZones.forEach((z) => z.addEventListener('pointerdown', (e) => {
     e.stopPropagation();
     if (multiTouch || settingsOpen) return;
     wake();
     if (state !== 'ready') return;
     setArmed(!armed);
     if (armed) haptic(12); // only the arm gets a buzz; disarm is silent
-  });
+  }));
 
+  // The top-left arm zone doubles as the settings trigger (closing settings resets anyway)
   let cornerTaps = [];
   settingsZone.addEventListener('pointerdown', (e) => {
-    e.stopPropagation();
     if (multiTouch || settingsOpen) return;
-    wake();
     const now = e.timeStamp;
     cornerTaps = cornerTaps.filter((t) => now - t < 900);
     cornerTaps.push(now);
@@ -703,12 +750,11 @@
   );
 
   // ---------- Settings screen ----------
-  const previewEl = $('#preview'), backEl = $('#back'), cornerEl = $('#corner');
+  const previewEl = $('#preview'), backEl = $('#back');
   const autoJamEl = $('#autoJam'), jamCountEl = $('#jamCount');
 
   function syncSettingsUI() {
     backEl.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === settings.back));
-    cornerEl.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === settings.armCorner));
     autoJamEl.checked = settings.autoJam;
     jamCountEl.textContent = settings.autoJamAfter;
     previewEl.innerHTML = foldedCardSVG(settings.back);
@@ -716,7 +762,6 @@
   function change(patch) { Object.assign(settings, patch); saveSettings(); applySettings(); syncSettingsUI(); }
 
   backEl.addEventListener('click', (e) => { const v = e.target.dataset.v; if (v) change({ back: v }); });
-  cornerEl.addEventListener('click', (e) => { const v = e.target.dataset.v; if (v) change({ armCorner: v }); });
   autoJamEl.addEventListener('change', () => change({ autoJam: autoJamEl.checked }));
   $('#jamMinus').addEventListener('click', () => change({ autoJamAfter: Math.max(1, settings.autoJamAfter - 1) }));
   $('#jamPlus').addEventListener('click', () => change({ autoJamAfter: Math.min(30, settings.autoJamAfter + 1) }));
