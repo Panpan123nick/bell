@@ -737,15 +737,20 @@
     if (armed) haptic(12); // only the arm gets a buzz; disarm is silent
   }));
 
-  // The top-left arm zone doubles as the settings trigger (closing settings resets anyway)
-  let cornerTaps = [];
+  // Holding the top-left arm zone for 2s opens settings (closing settings resets anyway)
+  let holdTimer = null;
+  const cancelHold = () => { clearTimeout(holdTimer); holdTimer = null; };
   settingsZone.addEventListener('pointerdown', (e) => {
     if (multiTouch || settingsOpen) return;
-    const now = e.timeStamp;
-    cornerTaps = cornerTaps.filter((t) => now - t < 900);
-    cornerTaps.push(now);
-    if (cornerTaps.length >= 3) { cornerTaps = []; openSettings(); }
+    cancelHold();
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      if (multiTouch || settingsOpen) return;
+      haptic(20);
+      openSettings();
+    }, 2000);
   });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => settingsZone.addEventListener(t, cancelHold));
 
   // ---------- Global touch guards: two-finger reset, no zoom/scroll/callouts ----------
   document.addEventListener('touchstart', (e) => {
