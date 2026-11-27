@@ -505,9 +505,32 @@
       [{ transform: 'scale(1)' }, { transform: 'scale(.9)', offset: 0.28 }, { transform: 'scale(1)' }],
       { duration: 190, easing: 'cubic-bezier(.3,.7,.4,1)' }
     );
+    // The strike pushes the dome down, then it shivers and settles. Direction varies per tap
+    // so repeated rings never look identical.
+    const s = Math.random() < 0.5 ? -1 : 1, k = 0.8 + Math.random() * 0.4;
+    const j = (x, y, r, sc) => ({ transform: `translate(${x * s * k}px,${y * k}px) rotate(${r * s * k}deg) scale(${sc})` });
+    dome.getAnimations().forEach((a) => a.cancel());
     dome.animate(
-      [{ transform: 'scale(1)' }, { transform: 'scale(.992)', offset: 0.3 }, { transform: 'scale(1)' }],
-      { duration: 200, easing: 'ease-out' }
+      [
+        j(0, 0, 0, 1),
+        { ...j(0, 0.7, 0, 0.986), offset: 0.1 },
+        { ...j(0.9, -0.3, 0.8, 1.003), offset: 0.24 },
+        { ...j(-0.7, 0.25, -0.55, 0.999), offset: 0.38 },
+        { ...j(0.45, -0.1, 0.32, 1), offset: 0.53 },
+        { ...j(-0.22, 0, -0.15, 1), offset: 0.7 },
+        { ...j(0.08, 0, 0.05, 1), offset: 0.86 },
+        j(0, 0, 0, 1)
+      ],
+      { duration: 460, easing: 'ease-out' }
+    );
+    base.animate(
+      [
+        { transform: 'translate(0,0)' },
+        { transform: `translate(${0.4 * s}px,.35px)`, offset: 0.12 },
+        { transform: `translate(${-0.25 * s}px,0)`, offset: 0.3 },
+        { transform: 'translate(0,0)' }
+      ],
+      { duration: 240, easing: 'ease-out' }
     );
   }
 
